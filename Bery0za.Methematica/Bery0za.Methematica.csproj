@@ -5,6 +5,10 @@
     <RootNamespace>Bery0za.Methematica</RootNamespace>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Bery0za.Methematica</AssemblyName>
+    <Authors>Bery0za</Authors>
+    <Company>Bery0za's</Company>
+    <Product>Methematica</Product>
+    <Copyright>Bery0za 2020</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
