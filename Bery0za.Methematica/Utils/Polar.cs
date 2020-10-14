@@ -1,11 +1,11 @@
 ﻿using System;
-
 #if DOUBLE
 using Real = System.Double;
 using Math = System.Math;
 #else
-using Real = System.Single; 
+using Real = System.Single;
 using Math = Bery0za.Methematica.MathF;
+
 #endif
 
 namespace Bery0za.Methematica.Utils

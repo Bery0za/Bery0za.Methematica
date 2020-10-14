@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Bery0za.Methematica</RootNamespace>
-    <LangVersion>latest</LangVersion>
-    <AssemblyName>Bery0za.Methematica</AssemblyName>
-    <Authors>Bery0za</Authors>
-    <Company>Bery0za's</Company>
-    <Product>Methematica</Product>
-    <Copyright>Bery0za 2020</Copyright>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<RootNamespace>Bery0za.Methematica</RootNamespace>
+		<LangVersion>latest</LangVersion>
+		<AssemblyName>Bery0za.Methematica</AssemblyName>
+		<Authors>Bery0za</Authors>
+		<Company>Bery0za's</Company>
+		<Product>Methematica</Product>
+		<Copyright>Bery0za 2020</Copyright>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MathNet.Numerics" Version="4.5.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MathNet.Numerics" Version="4.5.1" />
+	</ItemGroup>
 
 </Project>

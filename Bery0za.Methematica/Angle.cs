@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-
 #if DOUBLE
 using Real = System.Double;
 using Math = System.Math;
 #else
-using Real = System.Single; 
+using Real = System.Single;
 using Math = Bery0za.Methematica.MathF;
+
 #endif
 
 namespace Bery0za.Methematica
@@ -19,7 +19,7 @@ namespace Bery0za.Methematica
         public static Angle Pi => FromRadians(PI);
         public static Angle ThreeQuartersPi => FromRadians(PI + HALF_PI);
         public static Angle TwoPi => FromRadians(TWO_PI);
-        
+
 #if DOUBLE
         public const Real PI = System.Math.PI;
 #else
@@ -30,7 +30,7 @@ namespace Bery0za.Methematica
         public const Real TWO_PI = PI * 2;
         private const Real DEG_IN_RAD = 360 / TWO_PI;
         private const Real RAD_IN_DEG = TWO_PI / 360;
-        
+
         public readonly Real Radians;
         public readonly Real Degrees;
 
@@ -39,7 +39,7 @@ namespace Bery0za.Methematica
         {
             return new Angle(radians, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Angle FromDegrees(Real degrees)
         {
@@ -51,7 +51,7 @@ namespace Bery0za.Methematica
             Radians = radians;
             Degrees = radians * DEG_IN_RAD;
         }
-        
+
         private Angle(Real? radians, Real degrees)
         {
             Radians = degrees * RAD_IN_DEG;
@@ -81,7 +81,7 @@ namespace Bery0za.Methematica
         {
             return obj is Angle a && Equals(a);
         }
-        
+
         /// <summary>
         /// Clamps the angle to range [-π; π)
         /// </summary>
@@ -102,7 +102,7 @@ namespace Bery0za.Methematica
 
             return FromRadians(frac);
         }
-        
+
         /// <summary>
         /// Removes all of full turns (360° or 2π) from the angle
         /// </summary>
@@ -120,7 +120,7 @@ namespace Bery0za.Methematica
 
             return FromRadians(frac);
         }
-        
+
         public override int GetHashCode()
         {
             return Radians.GetHashCode();
@@ -149,7 +149,7 @@ namespace Bery0za.Methematica
         {
             return Math.Tanh(Radians);
         }
-        
+
         public override string ToString()
         {
             return $"\u2220 {Radians} rad, {Degrees}°";
@@ -172,55 +172,55 @@ namespace Bery0za.Methematica
         {
             return FromRadians(Math.Atan(radians));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Angle Atan2(Real y, Real x)
         {
             return FromRadians(Math.Atan2(y, x));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Angle operator -(Angle a)
         {
             return FromRadians(-a.Radians);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Angle operator +(Angle a, Angle b)
         {
             return FromRadians(a.Radians + b.Radians);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Angle operator -(Angle a, Angle b)
         {
             return FromRadians(a.Radians - b.Radians);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Angle operator *(Angle a, Real b)
         {
             return FromRadians(a.Radians * b);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Angle operator *(Real a, Angle b)
         {
             return FromRadians(a * b.Radians);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Angle operator /(Angle a, Real b)
         {
             return FromRadians(a.Radians / b);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Angle a, Angle b)
         {
             return a.Equals(b);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Angle a, Angle b)
         {
@@ -232,19 +232,19 @@ namespace Bery0za.Methematica
         {
             return a.Radians > b.Radians;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator >=(Angle a, Angle b)
         {
             return a.Radians >= b.Radians;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <(Angle a, Angle b)
         {
             return a.Radians < b.Radians;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <=(Angle a, Angle b)
         {

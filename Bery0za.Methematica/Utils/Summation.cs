@@ -75,9 +75,12 @@ namespace Bery0za.Methematica.Utils
             else
             {
                 int m = count / 2;
+
                 sum = Pairwise(elements, start, start + m - 1, threshold)
-                    + Pairwise(elements, start + m, start + count - 1, threshold);
-            };
+                      + Pairwise(elements, start + m, start + count - 1, threshold);
+            }
+
+            ;
 
             return sum;
         }

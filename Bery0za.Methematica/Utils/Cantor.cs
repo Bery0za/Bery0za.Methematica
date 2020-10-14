@@ -34,7 +34,7 @@ namespace Bery0za.Methematica.Utils
             {
                 throw new ArgumentException("At least two numbers needed.");
             }
-            
+
             if (numList.Count == 2)
             {
                 return Pairing(numList.First(), numList.Last());

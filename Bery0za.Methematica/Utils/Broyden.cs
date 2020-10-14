@@ -12,7 +12,9 @@ using MathNet.Numerics.LinearAlgebra.Double;
 #else
 using Real = System.Single;
 using Math = Bery0za.Methematica.MathF;
+
 using MathNet.Numerics.LinearAlgebra.Single;
+
 #endif
 
 namespace Bery0za.Methematica.Utils
@@ -46,7 +48,7 @@ namespace Bery0za.Methematica.Utils
             Real num1 = ToReal(denseVector2.L2Norm());
 
             Matrix<Real> approximateJacobian =
-                    Broyden.CalculateApproximateJacobian(f, initialGuess, numArray, jacobianStepSize);
+                Broyden.CalculateApproximateJacobian(f, initialGuess, numArray, jacobianStepSize);
 
             for (int index = 0; index <= maxIterations; ++index)
             {
@@ -74,8 +76,9 @@ namespace Bery0za.Methematica.Utils
                 }
 
                 Matrix<Real> matrix =
-                        (denseVector5 - denseVector2 - approximateJacobian.Multiply(denseVector3)).ToColumnMatrix()
-                        * denseVector3.Multiply(ToReal(1.0) / Math.Pow(ToReal(denseVector3.L2Norm()), ToReal(2.0))).ToRowMatrix();
+                    (denseVector5 - denseVector2 - approximateJacobian.Multiply(denseVector3)).ToColumnMatrix()
+                    * denseVector3.Multiply(ToReal(1.0) / Math.Pow(ToReal(denseVector3.L2Norm()), ToReal(2.0)))
+                                  .ToRowMatrix();
 
                 approximateJacobian += matrix;
                 denseVector1 = denseVector4;

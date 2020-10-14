@@ -5,16 +5,17 @@ using System.Numerics;
 using System.Text;
 
 using Bery0za.Methematica.Extensions;
+
 using static Bery0za.Methematica.Helpers;
 
 using MathNet.Numerics;
-
 #if DOUBLE
 using Real = System.Double;
 using Math = System.Math;
 #else
-using Real = System.Single; 
+using Real = System.Single;
 using Math = Bery0za.Methematica.MathF;
+
 #endif
 
 namespace Bery0za.Methematica
@@ -22,7 +23,7 @@ namespace Bery0za.Methematica
     public class Polynomial
     {
         private static List<int[]> _binomialLut = new List<int[]>();
-        
+
         public Complex[] P { get; }
         public int Order => P.Length - 1;
 
@@ -32,10 +33,7 @@ namespace Bery0za.Methematica
         }
 
         public Polynomial(params Real[] p)
-            : this(Array.ConvertAll(p, v => new Complex(v, 0)))
-        {
-
-        }
+            : this(Array.ConvertAll(p, v => new Complex(v, 0))) { }
 
         public static Polynomial FromBernstein(params Complex[] bernsteinWeights)
         {
@@ -55,10 +53,12 @@ namespace Bery0za.Methematica
                 int[] nextRow = new int[s + 1];
 
                 nextRow[0] = 1;
+
                 for (int i = 1, prev = s - 1; i <= prev; i++)
                 {
                     nextRow[i] = _binomialLut[prev][i - 1] + _binomialLut[prev][i];
                 }
+
                 nextRow[s] = 1;
 
                 _binomialLut.Add(nextRow);
@@ -70,47 +70,48 @@ namespace Bery0za.Methematica
         public static Func<Real, Real> BernsteinCoef(int n, int k)
         {
             int nk = n - k;
-            
+
             return t => Math.Pow(1 - t, nk) * Math.Pow(t, k);
         }
-        
+
         public static Real BernsteinCoef(int n, int k, Real t)
         {
             return Math.Pow(1 - t, n - k) * Math.Pow(t, k);
         }
-        
+
         private static Complex[] BernsteinToPower(Complex[] bCoefs)
         {
             int n = bCoefs.Length - 1;
             Complex[] pCoefs = PCoefficients(bCoefs);
-			
+
             for (int i = 0; i < bCoefs.Length; i++)
             {
                 pCoefs[i] *= BinomialCoef(n, i);
             }
-			
+
             return pCoefs;
         }
-		
+
         private static Complex[] PCoefficients(Complex[] bCoefs)
         {
-            Stack<Complex> pCoefs = new Stack<Complex>();			
+            Stack<Complex> pCoefs = new Stack<Complex>();
             List<Complex> table = bCoefs.ToList();
-			
+
             for (int i = 0; i < bCoefs.Length; i++)
             {
                 pCoefs.Push(table[0]);
-				
+
                 List<Complex> nextTable = new List<Complex>();
+
                 for (int j = 0; j < table.Count - 1; j++)
                 {
                     nextTable.Add(table[j + 1] - table[j]);
                 }
-				
+
                 table = nextTable;
             }
-			
-            return pCoefs.ToArray();			
+
+            return pCoefs.ToArray();
         }
 
         public Real Evaluate(Real x)
@@ -147,8 +148,9 @@ namespace Bery0za.Methematica
         {
             Complex[] p = new Complex[P.Length];
             Array.Copy(P, p, P.Length);
-            
+
             Complex leading = p[0];
+
             if (!(p[0] == Complex.One))
             {
                 for (int i = 0; i < p.Length; i++)
@@ -156,13 +158,15 @@ namespace Bery0za.Methematica
                     p[i] = p[i] / leading;
                 }
             }
-            
+
             return new Polynomial(p);
         }
 
         public IEnumerable<Real> RealRoots(Real epsilon = Numerics.EPSILON, int maxIterations = 25)
         {
-            return Roots(epsilon, maxIterations).Where(r => r.Imaginary.AlmostEqualRelative(0, epsilon)).Select(r => ToReal(r.Real));
+            return Roots(epsilon, maxIterations)
+                   .Where(r => r.Imaginary.AlmostEqualRelative(0, epsilon))
+                   .Select(r => ToReal(r.Real));
         }
 
         public Complex[] Roots(Real epsilon = Numerics.EPSILON, int maxIterations = 25)
@@ -174,6 +178,7 @@ namespace Bery0za.Methematica
             // Initialize a0
             Complex result = new Complex(0.4, 0.9);
             a0[0] = Complex.One;
+
             for (int i = 1; i < a0.Length; i++)
             {
                 a0[i] = a0[i - 1] * result;
@@ -181,21 +186,22 @@ namespace Bery0za.Methematica
 
             // Iterate
             int count = 0;
+
             while (true)
             {
                 for (int i = 0; i < a0.Length; i++)
                 {
-                   result = Complex.One;
+                    result = Complex.One;
 
-                   for (int j = 0; j < a0.Length; j++)
-                   {
-                      if (i != j)
-                      {
-                         result = (a0[i] - a0[j]) * result;
-                      }
-                   }
+                    for (int j = 0; j < a0.Length; j++)
+                    {
+                        if (i != j)
+                        {
+                            result = (a0[i] - a0[j]) * result;
+                        }
+                    }
 
-                   a1[i] = a0[i] - monic.Evaluate(a0[i]) / result;
+                    a1[i] = a0[i] - monic.Evaluate(a0[i]) / result;
                 }
 
                 count++;
@@ -210,7 +216,7 @@ namespace Bery0za.Methematica
 
             return a1;
         }
-        
+
         public (Polynomial quotent, Complex remainder, Complex factor) FactorDivision(Complex factorValue)
         {
             int count = P.Length;
@@ -226,15 +232,15 @@ namespace Bery0za.Methematica
             {
                 return (new Polynomial(0, 0), P[count - 1], factorValue);
             }
-            
+
             Complex[] res = new Complex[count - 1];
             Complex[] sub = new Complex[count];
             Array.Copy(P, sub, P.Length);
-            
+
             for (int i = 0; i < count - 1; i++)
             {
                 Complex[] mult = Enumerable.Repeat(Complex.Zero, count).ToArray();
-                
+
                 res[i] = sub[i];
                 mult[i] = sub[i];
                 mult[i + 1] = sub[i] * factorValue;
@@ -248,7 +254,7 @@ namespace Bery0za.Methematica
         public int ZerosCount()
         {
             int count = 0;
-            
+
             for (int i = 0; i < P.Length; i++)
             {
                 if (P[i].AlmostEqualRelative(0))
@@ -267,18 +273,21 @@ namespace Bery0za.Methematica
         public (int idx, Complex value) FirstNonZero()
         {
             int zerosCount = ZerosCount();
+
             if (zerosCount >= P.Length)
             {
                 return (-1, 0);
             }
-            
+
             return (zerosCount, P[zerosCount]);
         }
 
         public override string ToString()
         {
-            StringBuilder sb = Order == 0 ? new StringBuilder($"Polynomial: {P[0]}.") : new StringBuilder($"Polynomial: {P[0]}x^{Order}.");
-            
+            StringBuilder sb = Order == 0
+                ? new StringBuilder($"Polynomial: {P[0]}.")
+                : new StringBuilder($"Polynomial: {P[0]}x^{Order}.");
+
             for (int i = 1; i < Order; i++)
             {
                 sb.Append(P[i].Real < Complex.Zero.Real ? $"-{P[i]}x^{i}" : $"+{P[i]}x^{i}");
@@ -289,7 +298,7 @@ namespace Bery0za.Methematica
 
         public static Polynomial operator +(Polynomial term, Polynomial addend)
         {
-            bool termIsLongest = term.P.Length > addend.P.Length;            
+            bool termIsLongest = term.P.Length > addend.P.Length;
             Complex[] longest = termIsLongest ? term.P : addend.P;
             Complex[] shortest = termIsLongest ? addend.P : term.P;
 
@@ -298,9 +307,9 @@ namespace Bery0za.Methematica
             Complex[] sum = new Complex[longest.Length];
             Array.Copy(longest, sum, longest.Length);
 
-            for (int i = shortest.Length - 1; i >=0; i--)
+            for (int i = shortest.Length - 1; i >= 0; i--)
             {
-                sum[diff + i] += shortest[i]; 
+                sum[diff + i] += shortest[i];
             }
 
             return new Polynomial(sum);
@@ -333,9 +342,9 @@ namespace Bery0za.Methematica
                     res[j] += t[q + j];
                 }
 
-                for (int j = q - 1; j >= 0 ; j--)
-                {                    
-                    res.Insert(0, t[j]); 
+                for (int j = q - 1; j >= 0; j--)
+                {
+                    res.Insert(0, t[j]);
                 }
             }
 
@@ -346,12 +355,12 @@ namespace Bery0za.Methematica
         {
             return new Polynomial(multiplicand.P.Select(v => v * multiplier).ToArray());
         }
-        
+
         public static Polynomial operator /(Polynomial dividend, Polynomial divisor)
         {
             return Divide(dividend, divisor).quotent;
         }
-        
+
         public static Polynomial operator %(Polynomial dividend, Polynomial divisor)
         {
             return Divide(dividend, divisor).remainder;

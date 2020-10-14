@@ -53,12 +53,12 @@ namespace Bery0za.Methematica
         {
             return (float)System.Math.Log10(x);
         }
-        
+
         public static float Min(float x, float y)
         {
             return Math.Min(x, y);
         }
-        
+
         public static float Max(float x, float y)
         {
             return Math.Max(x, y);
@@ -68,7 +68,7 @@ namespace Bery0za.Methematica
         {
             return (float)System.Math.Pow(x, y);
         }
-        
+
         public static float Round(float x)
         {
             return (float)System.Math.Round(x);

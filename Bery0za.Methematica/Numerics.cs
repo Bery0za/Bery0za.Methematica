@@ -2,6 +2,7 @@
 using Real = System.Double;
 #else
 using Real = System.Single;
+
 #endif
 
 namespace Bery0za.Methematica

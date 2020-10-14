@@ -12,7 +12,7 @@ namespace Bery0za.Methematica
         private const decimal QUARTER_PI = 0.785398163397448309615660845819875721049292349843776455243M;
         private const decimal E_INV = 0.3678794411714423215955237701614608674458111310317678M;
         private const decimal LOG_10_INV = 0.434294481903251827651128918916605082294397005803666566114M;
-        
+
         private const decimal HALF = 0.5M;
         private const decimal ONE = 1M;
         private const decimal ZERO = 0M;
@@ -35,7 +35,10 @@ namespace Bery0za.Methematica
 
         public static decimal Asin(decimal x)
         {
-            if (x > ONE || x < -ONE) { throw new ArgumentException("x must be in [-1,1]"); }
+            if (x > ONE || x < -ONE)
+            {
+                throw new ArgumentException("x must be in [-1,1]");
+            }
 
             // Known values
             if (x == ZERO) return ZERO;
@@ -66,13 +69,15 @@ namespace Bery0za.Methematica
             var i = 1;
             y += result;
             var xx = x * x;
+
             do
             {
                 cachedResult = result;
                 result *= xx * (ONE - HALF / (i));
                 y += result / (2 * i + 1);
                 i++;
-            } while (cachedResult != result);
+            }
+            while (cachedResult != result);
 
             return y;
         }
@@ -81,6 +86,7 @@ namespace Bery0za.Methematica
         {
             if (x == ZERO) return ZERO;
             if (x == ONE) return QUARTER_PI;
+
             return Asin(x / Sqrt(ONE + x * x));
         }
 
@@ -97,12 +103,26 @@ namespace Bery0za.Methematica
 
         public static decimal Cos(decimal x)
         {
-            while (x > TWO_PI) { x -= TWO_PI; }
-            while (x < -TWO_PI) { x += TWO_PI; }
+            while (x > TWO_PI)
+            {
+                x -= TWO_PI;
+            }
+
+            while (x < -TWO_PI)
+            {
+                x += TWO_PI;
+            }
 
             // Now x is in (-2 * PI; 2 * PI)
-            if (x >= PI && x <= TWO_PI) { return -Cos(x - PI); }
-            if (x >= -TWO_PI && x <= -PI) { return -Cos(x + PI); }
+            if (x >= PI && x <= TWO_PI)
+            {
+                return -Cos(x - PI);
+            }
+
+            if (x >= -TWO_PI && x <= -PI)
+            {
+                return -Cos(x + PI);
+            }
 
             x = x * x;
 
@@ -110,6 +130,7 @@ namespace Bery0za.Methematica
             var xx = -x * HALF;
             var y = ONE + xx;
             var cachedY = y - ONE; // Init cache with different value
+
             for (var i = 1; cachedY != y; i++)
             {
                 cachedY = y;
@@ -132,6 +153,7 @@ namespace Bery0za.Methematica
         public static decimal Exp(decimal x)
         {
             var count = 0;
+
             while (x > ONE)
             {
                 x--;
@@ -148,6 +170,7 @@ namespace Bery0za.Methematica
             var result = ONE;
             var factorial = ONE;
             decimal cachedResult;
+
             do
             {
                 cachedResult = result;
@@ -163,9 +186,13 @@ namespace Bery0za.Methematica
 
         public static decimal Log(decimal x)
         {
-            if (x <= ZERO) { throw new ArgumentException("x must be greater than zero"); }
+            if (x <= ZERO)
+            {
+                throw new ArgumentException("x must be greater than zero");
+            }
 
             var count = 0;
+
             while (x >= ONE)
             {
                 x *= E_INV;
@@ -180,6 +207,7 @@ namespace Bery0za.Methematica
 
             x--;
             if (x == 0) return count;
+
             var result = ZERO;
             var iteration = 0;
             var y = ONE;
@@ -205,7 +233,7 @@ namespace Bery0za.Methematica
         {
             return Exp(y * Log(x));
         }
-        
+
         public static decimal PowN(decimal x, int y)
         {
             if (y == ZERO) return ONE;
@@ -214,7 +242,7 @@ namespace Bery0za.Methematica
             decimal @base = x;
             int power = y;
             decimal result = ONE;
-            
+
             while (power > 0)
             {
                 if (power % 2 == 1) result *= @base;
@@ -224,7 +252,7 @@ namespace Bery0za.Methematica
 
             return result;
         }
-        
+
         public static decimal Root(decimal x, int n)
         {
             if (n < ZERO) throw new OverflowException("Cannot calculate root from a negative number");
@@ -236,6 +264,7 @@ namespace Bery0za.Methematica
             {
                 previous = current;
                 if (previous == ZERO) return ZERO;
+
                 current = 1m / n * ((n - 1) * previous + x / PowN(previous, n - 1));
             }
             while (previous != current);
@@ -278,6 +307,7 @@ namespace Bery0za.Methematica
             {
                 previous = current;
                 if (previous == ZERO) return ZERO;
+
                 current = (previous + x / previous) * HALF;
             }
             while (previous != current);
@@ -304,9 +334,15 @@ namespace Bery0za.Methematica
         private static bool IsSignOfSinePositive(decimal x)
         {
             // Еruncating to  [-2 * PI; 2 * PI]
-            while (x >= TWO_PI) { x -= TWO_PI; }
+            while (x >= TWO_PI)
+            {
+                x -= TWO_PI;
+            }
 
-            while (x <= -TWO_PI) { x += TWO_PI; }
+            while (x <= -TWO_PI)
+            {
+                x += TWO_PI;
+            }
 
             // Now x is in [-2 * PI; 2 * PI]
             if (x >= -TWO_PI && x <= -PI) return true;
